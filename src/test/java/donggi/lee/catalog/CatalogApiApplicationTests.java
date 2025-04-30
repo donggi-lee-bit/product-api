@@ -1,10 +1,10 @@
-package donggi.lee.product;
+package donggi.lee.catalog;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ProductApiApplicationTests {
+class CatalogApiApplicationTests {
 
     @Test
     void contextLoads() {
