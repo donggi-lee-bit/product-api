@@ -1,6 +1,8 @@
 package donggi.lee.catalog.product.controller;
 
+import donggi.lee.catalog.product.application.CreateProductOptionFacade;
 import donggi.lee.catalog.product.application.ProductOptionService;
+import donggi.lee.catalog.product.application.dto.CreateOptionWithValuesCommand;
 import donggi.lee.catalog.product.controller.dto.OptionCreateRequest;
 import donggi.lee.catalog.product.controller.dto.ProductOptionResponse;
 import donggi.lee.catalog.product.controller.dto.OptionUpdateRequest;
@@ -24,10 +26,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductOptionRestController {
 
     private final ProductOptionService productOptionService;
+    private final CreateProductOptionFacade createProductOptionFacade;
 
     @PostMapping
-    public void create(@RequestBody OptionCreateRequest request) {
-        productOptionService.create(request.productId(), request.name(), request.type(), request.additionalPrice());
+    public ProductOptionResponse create(@RequestBody OptionCreateRequest request) {
+        CreateOptionWithValuesCommand command = new CreateOptionWithValuesCommand(
+            request.productId(),
+            request.name(),
+            request.additionalPrice(),
+            request.type(),
+            request.definitionIds(),
+            request.customValue()
+        );
+
+        ProductOption createdOption = createProductOptionFacade.createOptionWithValues(command);
+        return ProductOptionResponse.from(createdOption);
     }
 
     @GetMapping("/{id}")
