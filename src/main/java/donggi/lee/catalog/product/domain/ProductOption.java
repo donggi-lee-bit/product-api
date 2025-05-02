@@ -19,11 +19,11 @@ public class ProductOption extends BaseEntity {
     @Column(name = "product_id", nullable = false)
     private Long productId;
 
-    @Column(name = "option_name", nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "option_type", length = 20, nullable = false)
+    @Column(name = "type", length = 20, nullable = false)
     private OptionType type;
 
     @Column(name = "additional_price", nullable = false)

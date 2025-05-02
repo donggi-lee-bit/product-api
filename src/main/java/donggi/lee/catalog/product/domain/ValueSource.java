@@ -1,6 +1,6 @@
 package donggi.lee.catalog.product.domain;
 
-public enum OptionType {
-    CUSTOM,
+public enum ValueSource {
+    MANUAL,
     PREDEFINED
 }
