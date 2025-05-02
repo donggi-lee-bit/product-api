@@ -1,5 +1,6 @@
 package donggi.lee.catalog.user.application;
 
+import donggi.lee.catalog.common.security.JwtTokenProvider;
 import donggi.lee.catalog.user.controller.dto.LoginResponse;
 import donggi.lee.catalog.user.domain.User;
 import donggi.lee.catalog.user.domain.repository.UserRepository;
@@ -16,9 +17,12 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
     public void signup(final String email, final String rawPassword) {
+        // TODO: 이메일 중복 확인
+
         final var user = new User(email, passwordEncoder.encode(rawPassword));
 
         userRepository.save(user);
@@ -33,6 +37,8 @@ public class AuthService {
             throw new IncorrectPasswordException();
         }
 
-        return new LoginResponse("", "");
+        final var accessToken = jwtTokenProvider.createAccessToken(user.getEmail());
+
+        return new LoginResponse(accessToken, "");
     }
 }
