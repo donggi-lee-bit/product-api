@@ -3,7 +3,6 @@ package donggi.lee.catalog.product.application;
 import donggi.lee.catalog.product.application.dto.CreateOptionWithValuesCommand;
 import donggi.lee.catalog.product.application.dto.UpdateOptionValueCommand;
 import donggi.lee.catalog.product.application.dto.UpdateProductOptionCommand;
-import donggi.lee.catalog.product.domain.OptionType;
 import donggi.lee.catalog.product.domain.ProductOption;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,19 +35,19 @@ public class ProductOptionFacade {
             request.additionalPrice()
         );
 
-        // 옵션 타입에 따라 옵션값 생성
-        if (request.type() == OptionType.PREDEFINED) {
-            // 사전 정의값 ID 목록을 받아서 반복 생성
-            for (Long definitionId : request.definitionIds()) {
-                optionValueService.createPredefined(option.getId(), definitionId);
-            }
-        } else {
-            optionValueService.createManual(option.getId(), request.customValue());
-        }
+        // 옵션값 생성
+        optionValueService.create(option.getId(), request.value());
 
         return option;
     }
 
+    /**
+     * 상품 옵션을 수정하고, 옵션값도 함께 수정한다.
+     *
+     * @param optionId 옵션 ID
+     * @param optionCommand 옵션 수정 정보
+     * @param valueCommand 옵션값 수정 정보
+     */
     @Transactional
     public void updateOptionWithValues(Long optionId, UpdateProductOptionCommand optionCommand, UpdateOptionValueCommand valueCommand) {
         // 옵션 갱신

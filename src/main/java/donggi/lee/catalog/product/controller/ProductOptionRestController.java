@@ -9,7 +9,6 @@ import donggi.lee.catalog.product.controller.dto.OptionCreateRequest;
 import donggi.lee.catalog.product.controller.dto.ProductOptionResponse;
 import donggi.lee.catalog.product.controller.dto.OptionUpdateRequest;
 import donggi.lee.catalog.product.domain.ProductOption;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,8 +37,7 @@ public class ProductOptionRestController {
             request.name(),
             request.additionalPrice(),
             request.type(),
-            request.definitionIds(),
-            request.customValue()
+            request.value()
         );
 
         ProductOption createdOption = productOptionFacade.createOptionWithValues(command);
@@ -64,11 +62,11 @@ public class ProductOptionRestController {
     @PutMapping("/{optionId}")
     public void update(
         @PathVariable Long optionId,
-        @RequestBody @Valid OptionUpdateRequest request
+        @RequestBody OptionUpdateRequest request
     ) {
         UpdateProductOptionCommand optionCommand = new UpdateProductOptionCommand(request.name(), request.additionalPrice(), request.type());
 
-        UpdateOptionValueCommand valueCommand = new UpdateOptionValueCommand(request.valueName(), request.source(), request.definitionId());
+        UpdateOptionValueCommand valueCommand = new UpdateOptionValueCommand(request.value());
 
         productOptionFacade.updateOptionWithValues(optionId, optionCommand, valueCommand);
     }

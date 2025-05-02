@@ -42,12 +42,10 @@ public class ProductOptionService {
     }
     
     @Transactional
-    public ProductOption update(Long id, UpdateProductOptionCommand optionCommand) {
+    public void update(Long id, UpdateProductOptionCommand optionCommand) {
         ProductOption option = getById(id);
 
         option.update(optionCommand.name(), optionCommand.additionalPrice(), optionCommand.type());
-        
-        return option;
     }
     
     @Transactional
