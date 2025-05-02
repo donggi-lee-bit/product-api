@@ -44,23 +44,30 @@ public class OptionValue extends BaseEntity {
         this.valueName = valueName;
         this.source = source;
         this.definition = definition;
-        
+
         validateState();
     }
 
-    public OptionValue updateValue(String valueName, ValueSource source, OptionValueDefinition definition) {
-        this.valueName = valueName;
-        this.source = source;
-        this.definition = definition;
-        
+    public void updateCustomValue(String custom) {
+        this.valueName  = custom;
+        this.source     = ValueSource.MANUAL;
+        this.definition = null;
+
         validateState();
-        return this;
+    }
+
+    public void updatePredefinedValue(OptionValueDefinition definition) {
+        this.valueName  = definition.getLabel();
+        this.source     = ValueSource.PREDEFINED;
+        this.definition = definition;
+
+        validateState();
     }
     
     /**
      * 엔티티 상태 유효성 검증
-     * MANUAL 소스인 경우 definition이 null이어야 함
-     * PREDEFINED 소스인 경우 definition이 null이 아니어야 함
+     * MANUAL 경우 definition이 null이어야 함
+     * PREDEFINED 경우 definition이 null이 아니어야 함
      */
     private void validateState() {
         if (source == ValueSource.MANUAL && definition != null) {

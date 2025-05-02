@@ -1,6 +1,8 @@
 package donggi.lee.catalog.product.application;
 
 import donggi.lee.catalog.product.application.dto.CreateOptionWithValuesCommand;
+import donggi.lee.catalog.product.application.dto.UpdateOptionValueCommand;
+import donggi.lee.catalog.product.application.dto.UpdateProductOptionCommand;
 import donggi.lee.catalog.product.domain.OptionType;
 import donggi.lee.catalog.product.domain.ProductOption;
 import lombok.RequiredArgsConstructor;
@@ -8,12 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 상품 옵션과 옵션 값을 함께 등록하는
+ * 상품 옵션과 옵션 값을 함께 등록, 수정하는
  * 유스케이스 전용 애플리케이션 서비스
  */
 @Service
 @RequiredArgsConstructor
-public class CreateProductOptionFacade {
+public class ProductOptionFacade {
 
     private final ProductOptionService productOptionService;
     private final OptionValueService optionValueService;
@@ -45,5 +47,14 @@ public class CreateProductOptionFacade {
         }
 
         return option;
+    }
+
+    @Transactional
+    public void updateOptionWithValues(Long optionId, UpdateProductOptionCommand optionCommand, UpdateOptionValueCommand valueCommand) {
+        // 옵션 갱신
+        productOptionService.update(optionId, optionCommand);
+
+        // 옵션값 갱신
+        optionValueService.update(optionId, valueCommand);
     }
 }

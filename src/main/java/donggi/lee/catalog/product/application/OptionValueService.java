@@ -1,5 +1,6 @@
 package donggi.lee.catalog.product.application;
 
+import donggi.lee.catalog.product.application.dto.UpdateOptionValueCommand;
 import donggi.lee.catalog.product.domain.OptionValue;
 import donggi.lee.catalog.product.domain.OptionValueDefinition;
 import donggi.lee.catalog.product.domain.ValueSource;
@@ -56,5 +57,29 @@ public class OptionValueService {
         );
         
         return optionValueRepository.save(value);
+    }
+
+    /**
+     * 옵션 값 수정
+     *
+     * @param valueId 수정할 옵션 값 ID
+     * @param command 수정 요청 정보
+     */
+    @Transactional
+    public void update(Long valueId, UpdateOptionValueCommand command) {
+        // 기존 옵션 값 조회
+        OptionValue value = optionValueRepository.findById(valueId)
+            .orElseThrow(() -> new IllegalArgumentException("옵션 값을 찾을 수 없습니다: " + valueId));
+
+        // 타입에 따라 업데이트
+        if (command.isManual()) {
+            // custom 수정 (definition 제거)
+            value.updateCustomValue(command.valueName());
+        } else {
+            // predefined 수정 (미리 정의된 값으로 교체)
+            OptionValueDefinition predefinedDefinition = definitionRepository.findById(command.definitionId())
+                .orElseThrow(() -> new IllegalArgumentException("옵션 값 정의를 찾을 수 없습니다: " + command.definitionId()));
+            value.updatePredefinedValue(predefinedDefinition);
+        }
     }
 }

@@ -96,7 +96,7 @@ class OptionValueTest {
             String updatedValueName = "새 커스텀 색상";
 
             // when
-            value.updateValue(updatedValueName, ValueSource.MANUAL, null);
+            value.updateCustomValue(updatedValueName);
 
             // then
             assertThat(value.getValueName()).isEqualTo(updatedValueName);
@@ -105,13 +105,13 @@ class OptionValueTest {
         }
 
         @Test
-        void 선택_타입에서_입력_타입으로_변경하면_성공한다() {
+        void 입력_타입에서_선택_타입으로_변경하면_성공한다() {
             // given
             OptionValue value = new OptionValue(1L, "커스텀 색상", ValueSource.MANUAL, null);
             OptionValueDefinition definition = new OptionValueDefinition("COLOR_RED", "빨강", 1);
 
             // when
-            value.updateValue("빨강", ValueSource.PREDEFINED, definition);
+            value.updatePredefinedValue(definition);
 
             // then
             assertThat(value.getValueName()).isEqualTo("빨강");
@@ -120,16 +120,16 @@ class OptionValueTest {
         }
 
         @Test
-        void 입력_타입에서_선택_타입으로_변경하면_성공한다() {
+        void 선택_타입에서_입력_타입으로_변경하면_성공한다() {
             // given
             OptionValueDefinition definition = new OptionValueDefinition("COLOR_RED", "빨강", 1);
             OptionValue value = new OptionValue(1L, "빨강", ValueSource.PREDEFINED, definition);
 
             // when
-            value.updateValue("커스텀 색상", ValueSource.MANUAL, null);
+            value.updateCustomValue("새 커스텀 색상");
 
             // then
-            assertThat(value.getValueName()).isEqualTo("커스텀 색상");
+            assertThat(value.getValueName()).isEqualTo("새 커스텀 색상");
             assertThat(value.getSource()).isEqualTo(ValueSource.MANUAL);
             assertThat(value.getDefinition()).isNull();
         }

@@ -1,6 +1,7 @@
 
 package donggi.lee.catalog.product.application;
 
+import donggi.lee.catalog.product.application.dto.UpdateProductOptionCommand;
 import donggi.lee.catalog.product.domain.OptionType;
 import donggi.lee.catalog.product.domain.ProductOption;
 import donggi.lee.catalog.product.domain.repository.ProductOptionRepository;
@@ -41,10 +42,10 @@ public class ProductOptionService {
     }
     
     @Transactional
-    public ProductOption update(Long id, String name, Long additionalPrice, OptionType type) {
+    public ProductOption update(Long id, UpdateProductOptionCommand optionCommand) {
         ProductOption option = getById(id);
 
-        option.update(name, additionalPrice, type);
+        option.update(optionCommand.name(), optionCommand.additionalPrice(), optionCommand.type());
         
         return option;
     }

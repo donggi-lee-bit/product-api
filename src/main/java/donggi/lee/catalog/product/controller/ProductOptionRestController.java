@@ -1,12 +1,15 @@
 package donggi.lee.catalog.product.controller;
 
-import donggi.lee.catalog.product.application.CreateProductOptionFacade;
+import donggi.lee.catalog.product.application.ProductOptionFacade;
 import donggi.lee.catalog.product.application.ProductOptionService;
 import donggi.lee.catalog.product.application.dto.CreateOptionWithValuesCommand;
+import donggi.lee.catalog.product.application.dto.UpdateOptionValueCommand;
+import donggi.lee.catalog.product.application.dto.UpdateProductOptionCommand;
 import donggi.lee.catalog.product.controller.dto.OptionCreateRequest;
 import donggi.lee.catalog.product.controller.dto.ProductOptionResponse;
 import donggi.lee.catalog.product.controller.dto.OptionUpdateRequest;
 import donggi.lee.catalog.product.domain.ProductOption;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductOptionRestController {
 
     private final ProductOptionService productOptionService;
-    private final CreateProductOptionFacade createProductOptionFacade;
+    private final ProductOptionFacade productOptionFacade;
 
     @PostMapping
     public ProductOptionResponse create(@RequestBody OptionCreateRequest request) {
@@ -39,7 +42,7 @@ public class ProductOptionRestController {
             request.customValue()
         );
 
-        ProductOption createdOption = createProductOptionFacade.createOptionWithValues(command);
+        ProductOption createdOption = productOptionFacade.createOptionWithValues(command);
         return ProductOptionResponse.from(createdOption);
     }
 
@@ -58,9 +61,16 @@ public class ProductOptionRestController {
         return productOptionsPage.map(ProductOptionResponse::from);
     }
 
-    @PutMapping("/{id}")
-    public void update(@PathVariable Long id, @RequestBody OptionUpdateRequest request) {
-        productOptionService.update(id, request.name(), request.additionalPrice(), request.type());
+    @PutMapping("/{optionId}")
+    public void update(
+        @PathVariable Long optionId,
+        @RequestBody @Valid OptionUpdateRequest request
+    ) {
+        UpdateProductOptionCommand optionCommand = new UpdateProductOptionCommand(request.name(), request.additionalPrice(), request.type());
+
+        UpdateOptionValueCommand valueCommand = new UpdateOptionValueCommand(request.valueName(), request.source(), request.definitionId());
+
+        productOptionFacade.updateOptionWithValues(optionId, optionCommand, valueCommand);
     }
 
     @DeleteMapping("/{id}")
