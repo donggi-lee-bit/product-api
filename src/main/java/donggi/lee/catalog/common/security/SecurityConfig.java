@@ -32,6 +32,8 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+                // Swagger UI 및 OpenAPI 문서 접근 허용
+                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 // 회원가입, 로그인은 모두 허용
                 .requestMatchers("/v1/signup", "/v1/login").permitAll()
                 // 상품 관리 API 및 상품 옵션 관리 API는 로그인된 사용자만

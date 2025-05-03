@@ -1,0 +1,16 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    # (Mac/Windows) 컨테이너에서 호스트의 8080 포트를 바라보려면 host.docker.internal 사용
+    networks:
+      - simple-product-network
+
+networks:
+  simple-product-network:
+    driver: bridge
