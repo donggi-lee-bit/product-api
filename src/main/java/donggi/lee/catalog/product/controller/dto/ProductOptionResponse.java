@@ -8,7 +8,7 @@ public record ProductOptionResponse(
     Long productId,
     String name,
     OptionType type,
-    Long extraPrice
+    Long additionalPrice
 ) {
     public static ProductOptionResponse from(ProductOption option) {
         return new ProductOptionResponse(
