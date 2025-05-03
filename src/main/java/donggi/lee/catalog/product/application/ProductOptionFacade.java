@@ -26,9 +26,9 @@ public class ProductOptionFacade {
      * @return 생성된 ProductOption 엔티티
      */
     @Transactional
-    public ProductOption createOptionWithValues(CreateOptionWithValuesCommand request) {
+    public ProductOption createOptionWithValues(final CreateOptionWithValuesCommand request) {
         // 상품 옵션 생성
-        ProductOption option = productOptionService.create(
+        final var option = productOptionService.create(
             request.productId(),
             request.name(),
             request.type(),
@@ -49,7 +49,7 @@ public class ProductOptionFacade {
      * @param valueCommand 옵션값 수정 정보
      */
     @Transactional
-    public void updateOptionWithValues(Long optionId, UpdateProductOptionCommand optionCommand, UpdateOptionValueCommand valueCommand) {
+    public void updateOptionWithValues(final Long optionId, final UpdateProductOptionCommand optionCommand, final UpdateOptionValueCommand valueCommand) {
         // 옵션 갱신
         productOptionService.update(optionId, optionCommand);
 

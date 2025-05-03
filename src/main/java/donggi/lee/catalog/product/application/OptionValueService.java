@@ -3,6 +3,7 @@ package donggi.lee.catalog.product.application;
 import donggi.lee.catalog.product.application.dto.UpdateOptionValueCommand;
 import donggi.lee.catalog.product.domain.OptionValue;
 import donggi.lee.catalog.product.domain.repository.OptionValueRepository;
+import donggi.lee.catalog.product.exception.OptionValueNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +37,7 @@ public class OptionValueService {
     public void update(Long valueId, UpdateOptionValueCommand command) {
         // 기존 옵션 값 조회
         OptionValue value = optionValueRepository.findById(valueId)
-            .orElseThrow(() -> new IllegalArgumentException("옵션 값을 찾을 수 없습니다: " + valueId));
+            .orElseThrow(() -> new OptionValueNotFoundException(valueId));
 
         value.update(command.newValue());
     }

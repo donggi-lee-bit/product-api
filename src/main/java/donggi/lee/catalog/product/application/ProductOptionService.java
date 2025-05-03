@@ -5,6 +5,8 @@ import donggi.lee.catalog.product.application.dto.UpdateProductOptionCommand;
 import donggi.lee.catalog.product.domain.OptionType;
 import donggi.lee.catalog.product.domain.ProductOption;
 import donggi.lee.catalog.product.domain.repository.ProductOptionRepository;
+import donggi.lee.catalog.product.exception.ProductOptionLimitExceededException;
+import donggi.lee.catalog.product.exception.ProductOptionNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,40 +18,42 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductOptionService {
     
     private final ProductOptionRepository productOptionRepository;
-    
+
+    private static final int MAX_OPTIONS_PER_PRODUCT = 3;
+
     @Transactional
-    public ProductOption create(Long productId, String name, OptionType type, Long additionalPrice) {
+    public ProductOption create(final Long productId, final String name, final OptionType type, final Long additionalPrice) {
         // 상품당 옵션 개수 제한 검증 (최대 3개)
-        long optionCount = productOptionRepository.countByProductId(productId);
-        if (optionCount >= 3) {
-            throw new IllegalStateException("상품당 최대 3개의 옵션만 추가할 수 있습니다");
+        final var currentCount = productOptionRepository.countByProductId(productId);
+        if (currentCount >= MAX_OPTIONS_PER_PRODUCT) {
+            throw new ProductOptionLimitExceededException(productId, currentCount);
         }
 
-        ProductOption option = new ProductOption(productId, name, type, additionalPrice);
+        final var option = new ProductOption(productId, name, type, additionalPrice);
         
         return productOptionRepository.save(option);
     }
 
     @Transactional(readOnly = true)
-    public ProductOption getById(Long id) {
+    public ProductOption getById(final Long id) {
         return productOptionRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("상품 옵션을 찾을 수 없습니다: " + id));
+            .orElseThrow(() -> new ProductOptionNotFoundException(id));
     }
     
     @Transactional(readOnly = true)
-    public Page<ProductOption> list(Pageable pageable) {
+    public Page<ProductOption> list(final Pageable pageable) {
         return productOptionRepository.findAll(pageable);
     }
     
     @Transactional
-    public void update(Long id, UpdateProductOptionCommand optionCommand) {
-        ProductOption option = getById(id);
+    public void update(final Long id, final UpdateProductOptionCommand optionCommand) {
+        final var option = getById(id);
 
         option.update(optionCommand.name(), optionCommand.additionalPrice(), optionCommand.type());
     }
     
     @Transactional
-    public void delete(Long id) {
+    public void delete(final Long id) {
         ProductOption option = getById(id);
         productOptionRepository.delete(option);
     }
