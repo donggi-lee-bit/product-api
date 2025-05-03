@@ -24,9 +24,12 @@ public class SecurityConfig {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            // 회원가입, 로그인 엔드포인트는 인증 없이 허용하고, 나머지 요청은 인증 필요
             .authorizeHttpRequests(auth -> auth
+                // 회원가입, 로그인은 모두 허용
                 .requestMatchers("/v1/signup", "/v1/login").permitAll()
+                // 상품 관리 API 및 상품 옵션 관리 API는 로그인된 사용자만
+                .requestMatchers("/v1/products/**", "/v1/product-options/**").authenticated()
+                // 그 외 모든 요청은 인증 필요
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
