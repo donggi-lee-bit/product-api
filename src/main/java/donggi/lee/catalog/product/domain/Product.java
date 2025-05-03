@@ -1,6 +1,10 @@
 package donggi.lee.catalog.product.domain;
 
 import donggi.lee.catalog.common.domain.BaseEntity;
+import donggi.lee.catalog.product.exception.InvalidProductDescriptionException;
+import donggi.lee.catalog.product.exception.InvalidProductNameException;
+import donggi.lee.catalog.product.exception.InvalidProductPriceException;
+import donggi.lee.catalog.product.exception.InvalidShippingFeeException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -50,25 +54,25 @@ public class Product extends BaseEntity {
 
     private void validateName(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("상품 이름은 필수입니다.");
+            throw new InvalidProductNameException();
         }
     }
 
     private void validateDescription(String description) {
         if (description == null || description.isBlank()) {
-            throw new IllegalArgumentException("상품 상세 설명은 필수입니다.");
+            throw new InvalidProductDescriptionException();
         }
     }
 
     private void validatePrice(long price) {
         if (price <= 0) {
-            throw new IllegalArgumentException("상품 가격은 0보다 커야 합니다.");
+            throw new InvalidProductPriceException();
         }
     }
 
     private void validateShippingFee(long shippingFee) {
         if (shippingFee < 0) {
-            throw new IllegalArgumentException("배송비는 0 이상이어야 합니다.");
+            throw new InvalidShippingFeeException();
         }
     }
 }
