@@ -18,7 +18,7 @@ public class OptionValue extends BaseEntity {
     @Column(name = "option_id", nullable = false)
     private Long optionId;
 
-    @Column(name = "value", nullable = false)
+    @Column(name = "value_name", nullable = false)
     private String value;
 
     protected OptionValue() {}
