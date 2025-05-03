@@ -2,7 +2,7 @@ package donggi.lee.catalog.product.domain.repository;
 
 import donggi.lee.catalog.product.domain.Product;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
@@ -34,8 +34,8 @@ public interface ProductRepository {
     /**
      * 지정된 페이지 요청 정보에 따라 상품 목록을 페이징 조회합니다.
      *
-     * @param pageRequest 페이지 번호, 페이지 크기, 정렬 정보 등을 담은 PageRequest 객체
+     * @param pageable 페이징 정보를 담은 Pageable 객체
      * @return 조회된 상품 목록과 페이징 메타데이터를 포함한 Page<Product> 객체
      */
-    Page<Product> findAll(PageRequest pageRequest);
+    Page<Product> findAll(Pageable pageable);
 }

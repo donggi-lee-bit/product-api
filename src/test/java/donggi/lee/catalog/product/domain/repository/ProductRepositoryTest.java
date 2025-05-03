@@ -20,7 +20,7 @@ class ProductRepositoryTest {
     @Test
     void 새로운_상품을_저장했을_때_저장된_상품을_ID로_조회할_수_있다() {
         // given
-        Product product = new Product("", "", 100L, 3000L);
+        Product product = new Product("상품 이름", "상품 상세 설명", 100L, 3000L);
 
         // when
         Product saved = productRepository.save(product);
