@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,14 +17,18 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
+@Getter
 @Component
 public class JwtTokenProvider {
 
     @Value("${jwt.secret}")
     private String secretKeyBase64;
 
-    @Value("${jwt.expiration-ms}")
+    @Value("${jwt.access-expiration-ms}")
     private long accessTokenExpirationMs;
+
+    @Value("${jwt.refresh-expiration-ms}")
+    private long refreshTokenExpirationMs;
 
     private Key key;
 
@@ -34,15 +39,14 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    /** 주어진 subject(이메일)로만 액세스 토큰을 생성 */
+    /** 액세스 토큰 생성 */
     public String createAccessToken(final String subject) {
-        final Date now = new Date();
-        return Jwts.builder()
-            .setSubject(subject)
-            .setIssuedAt(now)
-            .setExpiration(new Date(now.getTime() + accessTokenExpirationMs))
-            .signWith(key, SignatureAlgorithm.HS256)
-            .compact();
+        return createToken(subject, accessTokenExpirationMs);
+    }
+
+    /** 리프레시 토큰 생성 */
+    public String createRefreshToken(final String subject) {
+        return createToken(subject, refreshTokenExpirationMs);
     }
 
     /** HTTP 요청의 Authorization 헤더에서 Bearer 토큰을 추출 */
@@ -83,4 +87,14 @@ public class JwtTokenProvider {
     }
 
     public record UserPrincipal(String email) {}
+
+    private String createToken(final String subject, final long expirationMilliseconds) {
+        final var now = new Date();
+        return Jwts.builder()
+            .setSubject(subject)
+            .setIssuedAt(now)
+            .setExpiration(new Date(now.getTime() + expirationMilliseconds))
+            .signWith(key, SignatureAlgorithm.HS256)
+            .compact();
+    }
 }
