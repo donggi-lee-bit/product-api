@@ -18,10 +18,10 @@ public class ProductService {
      * 새로운 상품을 생성하고 저장한다.
      */
     @Transactional
-    public void create(final String name, final String description, final long price, final long shippingFee) {
+    public Product create(final String name, final String description, final long price, final long shippingFee) {
         final var product = new Product(name, description, price, shippingFee);
 
-        productRepository.save(product);
+        return productRepository.save(product);
     }
 
     /**
