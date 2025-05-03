@@ -11,7 +11,9 @@ public enum ErrorCodeAndMessage {
 
     USER_NOT_FOUND("U001", "사용자를 찾을 수 없습니다: %s"),
     EMAIL_DUPLICATION("U002", "이미 사용 중인 이메일입니다: %s"),
-    INCORRECT_PASSWORD("U003", "비밀번호가 일치하지 않습니다");
+    INCORRECT_PASSWORD("U003", "비밀번호가 일치하지 않습니다"),
+
+    UNKNOWN_ERROR("X000", "알 수 없는 서버 오류가 발생했습니다");
 
     private final String code;
     private final String message;
