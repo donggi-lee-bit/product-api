@@ -1,4 +1,10 @@
 package donggi.lee.catalog.user.exception;
 
-public class IncorrectPasswordException extends RuntimeException {
+import donggi.lee.catalog.common.exception.DomainException;
+import donggi.lee.catalog.common.exception.ErrorCodeAndMessage;
+
+public class IncorrectPasswordException extends DomainException {
+    public IncorrectPasswordException() {
+        super(ErrorCodeAndMessage.INCORRECT_PASSWORD.getMessage());
+    }
 }
