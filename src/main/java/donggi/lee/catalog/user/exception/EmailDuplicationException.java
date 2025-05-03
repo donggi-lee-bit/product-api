@@ -5,6 +5,9 @@ import donggi.lee.catalog.common.exception.ErrorCodeAndMessage;
 
 public class EmailDuplicationException extends DomainException {
     public EmailDuplicationException(final String email) {
-        super(String.format(ErrorCodeAndMessage.EMAIL_DUPLICATION.getMessage(), email));
+        super(
+            ErrorCodeAndMessage.EMAIL_DUPLICATION.getCode(),
+            String.format(ErrorCodeAndMessage.EMAIL_DUPLICATION.getMessage(), email)
+        );
     }
 }

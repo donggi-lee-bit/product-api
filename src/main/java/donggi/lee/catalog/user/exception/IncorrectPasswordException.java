@@ -5,6 +5,9 @@ import donggi.lee.catalog.common.exception.ErrorCodeAndMessage;
 
 public class IncorrectPasswordException extends DomainException {
     public IncorrectPasswordException() {
-        super(ErrorCodeAndMessage.INCORRECT_PASSWORD.getMessage());
+        super(
+            ErrorCodeAndMessage.INCORRECT_PASSWORD.getCode(),
+            ErrorCodeAndMessage.INCORRECT_PASSWORD.getMessage()
+        );
     }
 }

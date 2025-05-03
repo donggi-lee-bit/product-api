@@ -6,6 +6,9 @@ import donggi.lee.catalog.common.exception.NotFoundException;
 public class UserNotFoundException extends NotFoundException {
 
     public UserNotFoundException(final String email) {
-        super(String.format(ErrorCodeAndMessage.USER_NOT_FOUND.getMessage(), email));
+        super(
+            ErrorCodeAndMessage.USER_NOT_FOUND.getCode(),
+            String.format(ErrorCodeAndMessage.USER_NOT_FOUND.getMessage(), email)
+        );
     }
 }
